@@ -4,8 +4,7 @@ create table if not exists Users(
 	enabled boolean not null default true,
 	first_name varchar(300),
 	second_name varchar(300),
-	city varchar(300),
-	country varchar(300)
+	phone_number varchar(300)
 );
 
 create table if not exists Authorities (

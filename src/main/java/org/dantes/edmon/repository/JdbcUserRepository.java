@@ -25,7 +25,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public User findByEmail(String email) {
         String sqlQuery = "select email, first_name, second_name, " +
-                "city, country from users where email = ?";
+                "phone_number from users where email = ?";
 
         return jdbc.queryForObject(sqlQuery, this::mapRowToIngredient, email);
     }
@@ -36,8 +36,7 @@ public class JdbcUserRepository implements UserRepository {
         toret.setFirstName(rs.getString("first_name"));
         toret.setSecondName(rs.getString("second_name"));
         toret.setEmail(rs.getString("email"));
-        toret.setCity( rs.getString("city"));
-        toret.setCountry(rs.getString("country"));
+        toret.setPhoneNumber(rs.getString("phone_number"));
 
         return toret;
     }
@@ -52,17 +51,17 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     private void saveIntoUsersTable(User user){
-        String sqlQuery = "insert into Users (email, password, first_name, second_name, city, country) values (?, ?, nullif(?, ''), nullif(?, ''), nullif(?, ''), nullif(?, '') )";
+        String sqlQuery = "insert into Users (email, password, first_name, second_name, phone_number) values (?, ?, nullif(?, ''), nullif(?, ''), nullif(?, '') )";
 
         PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(
-                sqlQuery, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR
+                sqlQuery, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR
         );
 
         PreparedStatementCreator psc =
                 factory.newPreparedStatementCreator(
                         Arrays.asList(
                                 user.getEmail(), user.getPassword(),  user.getFirstName(),
-                                user.getSecondName(), user.getCity(), user.getCountry()
+                                user.getSecondName(), user.getPhoneNumber()
                         )
                 );
 
