@@ -112,4 +112,13 @@ create table if not exists Rating_Book(
 
 create unique index ix_rating_book on Rating_Book (book_id, user_email);
 
-
+create table if not exists Purchase_book(
+    book_id integer not null,
+    user_email varchar(300) not null,
+    CONSTRAINT fk_book_id
+            foreign key (book_id) references Book(book_id) on delete cascade
+                                                           on update cascade,
+    CONSTRAINT fk_username
+            foreign key (user_email) references Users(email) on delete cascade
+                                                             on update cascade
+);
