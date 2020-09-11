@@ -26,8 +26,7 @@ create table if not exists Book(
 );
 
 create table if not exists Genre(
-    genre_name varchar(300) not null primary key,
-    cover_color varchar(300) not null
+    genre_name varchar(300) not null primary key
 );
 
 create table if not exists Book_Genre(
