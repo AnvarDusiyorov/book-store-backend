@@ -44,8 +44,8 @@ create unique index ix_book_genre on Book_Genre (book_id, genre_name);
 
 create table if not exists Author(
     author_id serial primary key,
-    author_first_name varchar(300) not null,
-    author_second_name varchar(300) not null,
+    author_first_name varchar(300),
+    author_second_name varchar(300),
     creative_pseudonym varchar(300) not null
 );
 
