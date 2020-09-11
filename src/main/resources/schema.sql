@@ -32,7 +32,7 @@ create table if not exists Genre(
 
 create table if not exists Book_Genre(
     book_id integer not null,
-    genre_name integer not null,
+    genre_name varchar(300) not null,
     CONSTRAINT fk_book_id
         foreign key (book_id) references Book(book_id) on delete cascade
                                                        on update cascade,
