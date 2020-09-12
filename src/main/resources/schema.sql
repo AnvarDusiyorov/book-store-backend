@@ -43,22 +43,22 @@ create table if not exists Book_Genre(
 create unique index ix_book_genre on Book_Genre (book_id, genre_name);
 
 create table if not exists Author(
-    author_id serial,
     creative_pseudonym varchar(300) not null primary key
 );
 
 create table if not exists Book_Author(
      book_id integer not null,
-     author_id integer not null,
+     creative_pseudonym varchar(300) not null,
      CONSTRAINT fk_book_id
             foreign key (book_id) references Book(book_id) on delete cascade
                                                            on update cascade,
-     CONSTRAINT fk_author_id
-            foreign key (author_id) references Author(author_id) on delete cascade
-                                                                 on update cascade
+     CONSTRAINT fk_creative_pseudonym
+            foreign key (creative_pseudonym) references Author(creative_pseudonym)
+            on delete cascade
+            on update cascade
 );
 
-create unique index ix_book_author on Book_Author (book_id, author_id);
+create unique index ix_book_author on Book_Author (book_id, creative_pseudonym);
 
 
 
@@ -86,7 +86,7 @@ create table if not exists Evaluate_Review(
     CONSTRAINT fk_review_id
         foreign key (review_id) references Review(review_id) on delete cascade
                                                              on update cascade,
-    CONSTRAINT
+    CONSTRAINT fk_username
         foreign key (user_email) references Users(email) on delete cascade
                                                          on update cascade
 );
