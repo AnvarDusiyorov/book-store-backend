@@ -31,9 +31,9 @@ public class JdbcManagementBookDtoRepository implements ManagementBookDtoReposit
         String imageLink = bookDTO.getImageLink();
         Double price = bookDTO.getPrice();
 
-        processGenres(genres);
-        processAuthors(authors);
         if(!isBookDtoAlreadyExist(bookDTO)){
+            processGenres(genres);
+            processAuthors(authors);
             processBook(bookTitle, price, imageLink);
             addRelations(bookDTO);
         }
@@ -93,7 +93,7 @@ public class JdbcManagementBookDtoRepository implements ManagementBookDtoReposit
 
         for(Integer namesakesBookID : namesakesIdList){
             List<String> namesakesGenres = getGenresByBookIDSortedByGenreName(namesakesBookID);
-            if(maybeNewBookGenres.equals(namesakesGenres)){
+             if(maybeNewBookGenres.equals(namesakesGenres)){
                 return true;
             }
         }
