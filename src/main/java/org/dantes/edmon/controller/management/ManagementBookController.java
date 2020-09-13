@@ -31,10 +31,12 @@ public class ManagementBookController {
         return new ResponseEntity<>(bookDTO, HttpStatus.OK);
     }
 
-//    @PostMapping(path = "/pile")
-//    public ResponseEntity<PileManagementBookDTO> saveListOfBooks(@RequestBody PileManagementBookDTO pileManagementBookDTO){
-//
-//
-//        return new ResponseEntity<>(pileManagementBookDTO, HttpStatus.OK);
-//    }
+    @PostMapping(path = "/pile")
+    public ResponseEntity<PileManagementBookDTO> saveListOfBooks(@RequestBody PileManagementBookDTO pileManagementBookDTO){
+
+        for(ManagementBookDTO bookDTO : pileManagementBookDTO.getBooks()){
+            managementBookDtoService.save(bookDTO);
+        }
+        return new ResponseEntity<>(pileManagementBookDTO, HttpStatus.OK);
+    }
 }
