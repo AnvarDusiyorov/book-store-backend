@@ -22,7 +22,8 @@ create table if not exists Book(
     book_id serial primary key,
     title varchar(300) not null,
     price double precision not null,
-    image_link text
+    image_link text not null,
+    book_description text not null
 );
 
 create table if not exists Genre(
