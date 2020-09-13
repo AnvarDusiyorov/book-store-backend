@@ -12,4 +12,5 @@ public class ManagementBookDTO {
     private List<String> genres;
     private String imageLink;
     private List<Author> authors;
+    private String bookDescription;
 }
