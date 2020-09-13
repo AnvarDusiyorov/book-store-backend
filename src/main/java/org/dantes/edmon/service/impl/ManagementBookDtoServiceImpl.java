@@ -7,6 +7,9 @@ import org.dantes.edmon.service.ManagementBookDtoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 public class ManagementBookDtoServiceImpl implements ManagementBookDtoService {
@@ -20,6 +23,9 @@ public class ManagementBookDtoServiceImpl implements ManagementBookDtoService {
 
     @Override
     public ManagementBookDTO save(ManagementBookDTO bookDTO) {
+        List<String> deduped = bookDTO.getGenres().stream().distinct().collect(Collectors.toList());
+        bookDTO.setGenres(deduped);
+
         return managementBookDtoRepository.save(bookDTO);
     }
 }
