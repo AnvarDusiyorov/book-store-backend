@@ -30,11 +30,12 @@ public class JdbcManagementBookDtoRepository implements ManagementBookDtoReposit
         List<Author> authors = bookDTO.getAuthors();
         String imageLink = bookDTO.getImageLink();
         Double price = bookDTO.getPrice();
+        String bookDescription = bookDTO.getBookDescription();
 
         if(!isBookDtoAlreadyExist(bookDTO)){
             processGenres(genres);
             processAuthors(authors);
-            processBook(bookTitle, price, imageLink);
+            processBook(bookTitle, price, imageLink, bookDescription);
             addRelations(bookDTO);
         }
 
@@ -130,8 +131,9 @@ public class JdbcManagementBookDtoRepository implements ManagementBookDtoReposit
         List<Author> authors = bookDTO.getAuthors();
         String imageLink = bookDTO.getImageLink();
         Double price = bookDTO.getPrice();
+        String bookDescription = bookDTO.getBookDescription();
 
-        Integer bookID = getLastBookID(bookTitle, price, imageLink);
+        Integer bookID = getLastBookID(bookTitle, price, imageLink, bookDescription);
 
         for(String genre : genres){
             try {
@@ -148,10 +150,11 @@ public class JdbcManagementBookDtoRepository implements ManagementBookDtoReposit
 
     // function for getting last bookID 'cause there can be many books with same title,
     // but with different genres and authors
-    private Integer getLastBookID(String bookTitle, Double price, String imageLink){
-        String sqlQuery = "select max(book_id) from book where title = ? and price = ? and image_link = ?";
+    private Integer getLastBookID(String bookTitle, Double price, String imageLink, String bookDescription){
+        String sqlQuery = "select max(book_id) from book where title = ? and " +
+                "price = ? and image_link = ? and book_description = ?";
 
-        return jdbc.queryForObject(sqlQuery, Integer.class, bookTitle, price, imageLink);
+        return jdbc.queryForObject(sqlQuery, Integer.class, bookTitle, price, imageLink, bookDescription);
     }
 
     private void addRelationBetweenBookAndGenre(Integer bookID, String genreName){
@@ -185,21 +188,21 @@ public class JdbcManagementBookDtoRepository implements ManagementBookDtoReposit
     }
 
 
-    private void processBook(String bookTitle, Double price, String imageLink){
+    private void processBook(String bookTitle, Double price, String imageLink, String bookDescription){
         try {
-            saveBook(bookTitle, price, imageLink);
+            saveBook(bookTitle, price, imageLink, bookDescription);
         }catch (Exception e){}
     }
 
-    private void saveBook(String bookTitle, Double price, String imageLink){
-        String sqlQuery = "insert into book(title, price, image_link) values(?, ?, nullif(?, '') )";
+    private void saveBook(String bookTitle, Double price, String imageLink, String bookDescription){
+        String sqlQuery = "insert into book(title, price, image_link, book_description) values(?, ?, ?, ? )";
 
         PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(
-                sqlQuery, Types.VARCHAR, Types.DOUBLE, Types.VARCHAR
+                sqlQuery, Types.VARCHAR, Types.DOUBLE, Types.VARCHAR, Types.VARCHAR
         );
 
         PreparedStatementCreator psc = factory.newPreparedStatementCreator(
-                Arrays.asList(bookTitle, price, imageLink)
+                Arrays.asList(bookTitle, price, imageLink, bookDescription)
         );
 
         jdbc.update(psc);
