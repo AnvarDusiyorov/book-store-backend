@@ -4,6 +4,7 @@ import org.dantes.edmon.jwt.JwtConfig;
 import org.dantes.edmon.jwt.JwtTokenVerifier;
 import org.dantes.edmon.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,8 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder);
     }
 
-    private final String HOME_PAGE_ENDPOINT = "/home/**";
     private final String ADMIN_MANAGEMENT_ENDPOINT = "/management/**";
+    private final String REVIEW_ENDPOINT = "/review/**";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -62,7 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers(ADMIN_MANAGEMENT_ENDPOINT)
                         .access("hasRole('ROLE_ADMIN')")
-                    .antMatchers(HOME_PAGE_ENDPOINT)
+                    .antMatchers(HttpMethod.POST, REVIEW_ENDPOINT)
+                        .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+                    .antMatchers(HttpMethod.DELETE, REVIEW_ENDPOINT)
                         .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
                     .antMatchers("/**").permitAll();
 
