@@ -99,7 +99,7 @@ create unique index ix_evaluate_review on Evaluate_Review (review_id, user_email
 create table if not exists Rating_Book(
     book_id integer not null,
     user_email varchar(300) not null,
-    rating integer not null,
+    rating double precision not null,
     CONSTRAINT fk_book_id
         foreign key (book_id) references Book(book_id) on delete cascade
                                                        on update cascade,
