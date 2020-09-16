@@ -68,6 +68,7 @@ create table if not exists Review(
     book_id integer not null,
     user_email varchar(300) not null,
     description text not null,
+    createdAt timestamp not null,
     CONSTRAINT fk_book_id
         foreign key (book_id) references Book(book_id) on delete cascade
                                                        on update cascade,
