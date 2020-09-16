@@ -1,6 +1,6 @@
 package org.dantes.edmon.controller;
 
-import org.dantes.edmon.dto.SignupResponseDTO;
+import org.dantes.edmon.dto.CommonResponseDTO;
 import org.dantes.edmon.model.User;
 import org.dantes.edmon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,10 @@ public class SignupController {
 
 
     @PostMapping
-    public ResponseEntity<SignupResponseDTO> saveUser(@RequestBody User user){
+    public ResponseEntity<CommonResponseDTO> saveUser(@RequestBody User user){
         User userInDatabase = userService.findByEmail(user.getEmail());
 
-        SignupResponseDTO responseDTO = new SignupResponseDTO();
+        CommonResponseDTO responseDTO = new CommonResponseDTO();
         HttpStatus httpStatus = (userInDatabase == null) ? HttpStatus.CREATED : HttpStatus.CONFLICT;
 
         if(userInDatabase == null){

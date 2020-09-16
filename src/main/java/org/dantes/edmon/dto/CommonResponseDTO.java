@@ -3,7 +3,7 @@ package org.dantes.edmon.dto;
 import lombok.Data;
 
 @Data
-public class SignupResponseDTO {
+public class CommonResponseDTO {
     private String created;
     private String reason;
 }
