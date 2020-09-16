@@ -1,7 +1,7 @@
 package org.dantes.edmon.repository;
 
 import org.dantes.edmon.dto.BestsellerBookDTO;
-import org.dantes.edmon.dto.RatingDTO;
+import org.dantes.edmon.dto.RealRatingOfBookDTO;
 import org.dantes.edmon.model.Author;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,7 +31,7 @@ public class JdbcHomeResponseDtoRepository implements HomeResponseDtoRepository 
         for(Integer bookID : topBestsellersIDlist){
             String title = getTitleByBookID(bookID);
             List<Author> authors = getAuthorsByBookID(bookID);
-            RatingDTO ratingInfo = getRatingInfoByBookID(bookID);
+            RealRatingOfBookDTO ratingInfo = getRatingInfoByBookID(bookID);
 
             BestsellerBookDTO bookDTO = new BestsellerBookDTO();
             bookDTO.setTitle(title);
@@ -81,19 +81,19 @@ public class JdbcHomeResponseDtoRepository implements HomeResponseDtoRepository 
         return jdbc.queryForObject(sqlQuery, String.class, bookID);
     }
 
-    private RatingDTO getRatingInfoByBookID(Integer bookID){
+    private RealRatingOfBookDTO getRatingInfoByBookID(Integer bookID){
         String sqlQuery = "SELECT SUM(rating)/count(rating) AS real_rating FROM rating_book WHERE book_id = ? GROUP BY book_id";
 
-        RatingDTO ratingDTO = new RatingDTO();
-        ratingDTO.setHasRating("true");
+        RealRatingOfBookDTO realRatingOfBookDTO = new RealRatingOfBookDTO();
+        realRatingOfBookDTO.setHasRating("true");
 
         try {
             Double rating = jdbc.queryForObject(sqlQuery, Double.class, bookID);
-            ratingDTO.setRating(rating);
+            realRatingOfBookDTO.setRating(rating);
         }catch (Exception e){
-            ratingDTO.setHasRating("false");
+            realRatingOfBookDTO.setHasRating("false");
         }
 
-        return ratingDTO;
+        return realRatingOfBookDTO;
     }
 }
