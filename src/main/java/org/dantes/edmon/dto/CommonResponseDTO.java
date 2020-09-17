@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CommonResponseDTO {
-    private String created;
+    private boolean created;
     private String reason;
 }

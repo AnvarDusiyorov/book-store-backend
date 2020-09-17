@@ -32,9 +32,9 @@ public class SignupController {
 
         if(userInDatabase == null){
             userService.save(user);
-            responseDTO.setCreated("true");
+            responseDTO.setCreated(true);
         }else {
-            responseDTO.setCreated("false");
+            responseDTO.setCreated(false);
             responseDTO.setReason("such user already exist");
         }
 

@@ -40,10 +40,10 @@ public class ReviewController {
         if(reviewInDatabase == null){
             reviewService.saveReview(reviewDTO);
 
-            commonResponseDTO.setCreated("true");
+            commonResponseDTO.setCreated(true);
             return new ResponseEntity<>(commonResponseDTO, HttpStatus.CREATED);
         }else {
-            commonResponseDTO.setCreated("false");
+            commonResponseDTO.setCreated(false);
             commonResponseDTO.setReason("User already added review to this book!");
             return new ResponseEntity<>(commonResponseDTO, HttpStatus.CONFLICT);
         }
@@ -64,10 +64,10 @@ public class ReviewController {
 
         if(evaluateReviewInDatabase == null){
             reviewService.saveEvaluateReview(evaluateReviewDTO);
-            commonResponseDTO.setCreated("true");
+            commonResponseDTO.setCreated(true);
             return new ResponseEntity<>(commonResponseDTO, HttpStatus.CREATED);
         }else{
-            commonResponseDTO.setCreated("false");
+            commonResponseDTO.setCreated(false);
             commonResponseDTO.setReason("User already evaluated that review!");
 
             return new ResponseEntity<>(commonResponseDTO, HttpStatus.CONFLICT);
