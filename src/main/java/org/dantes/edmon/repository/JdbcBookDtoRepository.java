@@ -11,13 +11,13 @@ import java.sql.ResultSet;
 import java.util.List;
 
 @Repository
-public class JdbcBookDtoDtoRepository implements BookDtoRepository {
+public class JdbcBookDtoRepository implements BookDtoRepository {
 
     private JdbcTemplate jdbc;
     private ReviewRepository reviewRepository;
 
     @Autowired
-    public JdbcBookDtoDtoRepository(JdbcTemplate jdbc, ReviewRepository reviewRepository){
+    public JdbcBookDtoRepository(JdbcTemplate jdbc, ReviewRepository reviewRepository){
         this.jdbc = jdbc;
         this.reviewRepository = reviewRepository;
     }
@@ -90,4 +90,9 @@ public class JdbcBookDtoDtoRepository implements BookDtoRepository {
         return authors;
     }
 
+    @Override
+    public List<Integer> getAllBookIdByGenre(String genreName) {
+        // TODO
+        return null;
+    }
 }
