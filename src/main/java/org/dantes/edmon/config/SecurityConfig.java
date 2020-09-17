@@ -50,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final String ADMIN_MANAGEMENT_ENDPOINT = "/management/**";
     private final String REVIEW_ENDPOINT = "/review/**";
+    private final String BUY_BOOK_ENDPOINT = "/buybook/**";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -66,6 +67,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.POST, REVIEW_ENDPOINT)
                         .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
                     .antMatchers(HttpMethod.DELETE, REVIEW_ENDPOINT)
+                        .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+                    .antMatchers(BUY_BOOK_ENDPOINT)
                         .access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
                     .antMatchers("/**").permitAll();
 
