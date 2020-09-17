@@ -1,0 +1,8 @@
+INSERT INTO purchase_book(user_email, book_id)
+SELECT 'admin@gmail.com', book_id FROM book;
+
+INSERT INTO purchase_book(user_email, book_id)
+SELECT 'Lawyer@gmail.com', book_id FROM book WHERE book_id BETWEEN 1 AND 10;
+
+INSERT INTO purchase_book(user_email, book_id)
+SELECT 'Architect@gmail.com', book_id FROM book WHERE book_id BETWEEN 7 AND 15;
