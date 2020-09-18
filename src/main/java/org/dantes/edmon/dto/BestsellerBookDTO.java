@@ -9,5 +9,5 @@ import java.util.List;
 public class BestsellerBookDTO {
     private String title;
     private List<Author> authors;
-    private RealRatingOfBookDTO ratingInfo;
+    private Double rating;
 }

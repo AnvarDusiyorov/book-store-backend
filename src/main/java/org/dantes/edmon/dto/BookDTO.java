@@ -18,7 +18,7 @@ public class BookDTO{
     private List<String> genres;
 
     private List<ReviewDTO> reviews;
-    private RealRatingOfBookDTO ratingInfo;
+    private Double rating;
 
     private Integer ratingGivenByUser;
 }
