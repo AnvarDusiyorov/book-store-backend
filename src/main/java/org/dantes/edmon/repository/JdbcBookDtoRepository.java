@@ -1,7 +1,6 @@
 package org.dantes.edmon.repository;
 
 import org.dantes.edmon.dto.BookDTO;
-import org.dantes.edmon.dto.RealRatingOfBookDTO;
 import org.dantes.edmon.dto.ShortViewBookDTO;
 import org.dantes.edmon.dto.search.SearchRequestDTO;
 import org.dantes.edmon.model.Author;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
