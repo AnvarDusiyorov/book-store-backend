@@ -1,7 +1,6 @@
 package org.dantes.edmon.repository;
 
 import org.dantes.edmon.dto.BestsellerBookDTO;
-import org.dantes.edmon.dto.RealRatingOfBookDTO;
 import org.dantes.edmon.model.Author;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,11 +30,11 @@ public class JdbcHomeResponseDtoRepository implements HomeResponseDtoRepository 
         for(Integer bookID : topBestsellersIDlist){
             String title = getTitleByBookID(bookID);
             List<Author> authors = getAuthorsByBookID(bookID);
-            RealRatingOfBookDTO ratingInfo = getRatingInfoByBookID(bookID);
+            Double rating = getRatingByBookID(bookID);
 
             BestsellerBookDTO bookDTO = new BestsellerBookDTO();
             bookDTO.setTitle(title);
-            bookDTO.setRatingInfo(ratingInfo);
+            bookDTO.setRating(rating);
             bookDTO.setAuthors(authors);
 
             bestsellerBookDTOS.add(bookDTO);
@@ -63,6 +62,8 @@ public class JdbcHomeResponseDtoRepository implements HomeResponseDtoRepository 
         String sqlQuery = "SELECT author.creative_pseudonym as creative_pseudonym, book_id FROM " +
                 "author INNER JOIN book_author ON author.creative_pseudonym = book_author.creative_pseudonym " +
                 "WHERE book_id = ?";
+        // for future purposes this sql query uses INNER JOIN
+        // (i.e. for getting more info about authors)
 
         List<Author> authors = jdbc.query(
                 sqlQuery, (ResultSet rs, int rownum) -> {
@@ -81,19 +82,12 @@ public class JdbcHomeResponseDtoRepository implements HomeResponseDtoRepository 
         return jdbc.queryForObject(sqlQuery, String.class, bookID);
     }
 
-    private RealRatingOfBookDTO getRatingInfoByBookID(Integer bookID){
-        String sqlQuery = "SELECT SUM(rating)/count(rating) AS real_rating FROM rating_book WHERE book_id = ? GROUP BY book_id";
+    private Double getRatingByBookID(Integer bookID){
+        String sqlQuery = "SELECT SUM(rating)/count(rating) AS real_rating " +
+                "FROM rating_book RIGHT JOIN book " +
+                "ON rating_book.book_id = book.book_id " +
+                "WHERE book.book_id = ? GROUP BY book.book_id";
 
-        RealRatingOfBookDTO realRatingOfBookDTO = new RealRatingOfBookDTO();
-        realRatingOfBookDTO.setHasRating("true");
-
-        try {
-            Double rating = jdbc.queryForObject(sqlQuery, Double.class, bookID);
-            realRatingOfBookDTO.setRating(rating);
-        }catch (Exception e){
-            realRatingOfBookDTO.setHasRating("false");
-        }
-
-        return realRatingOfBookDTO;
+        return jdbc.queryForObject(sqlQuery, Double.class, bookID);
     }
 }
