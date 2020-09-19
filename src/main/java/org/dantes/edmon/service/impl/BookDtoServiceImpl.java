@@ -101,7 +101,21 @@ public class BookDtoServiceImpl implements BookDtoService {
     @Override
     public PileBookDTO getAllShortViewBooksBySearchRequestDTO(SearchRequestDTO searchRequestDTO) {
         PileBookDTO pileBookDTO = new PileBookDTO();
-        pileBookDTO.setBooks(bookDtoRepository.getAllBooksBySearchRequestDTO(searchRequestDTO));
+
+        List<ShortViewBookDTO> books = new ArrayList<>();
+        List<Integer> bookIDlist = bookDtoRepository.getAllBookIDBySearchRequestDTO(searchRequestDTO);
+
+        if(bookIDlist != null){
+            for(Integer bookID : bookIDlist){
+                books.add(findShortViewBookByBookID(bookID));
+            }
+        }
+
+        if(books.isEmpty()){
+            books = null;
+        }
+
+        pileBookDTO.setBooks(books);
         return pileBookDTO;
     }
 

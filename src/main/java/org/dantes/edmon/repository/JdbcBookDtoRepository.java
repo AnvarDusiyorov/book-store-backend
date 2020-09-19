@@ -6,21 +6,29 @@ import org.dantes.edmon.dto.search.SearchRequestDTO;
 import org.dantes.edmon.model.Author;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Repository
 public class JdbcBookDtoRepository implements BookDtoRepository {
 
     private JdbcTemplate jdbc;
     private ReviewRepository reviewRepository;
+    private NamedParameterJdbcTemplate namedParameterJdbc;
 
     @Autowired
-    public JdbcBookDtoRepository(JdbcTemplate jdbc, ReviewRepository reviewRepository){
+    public JdbcBookDtoRepository(JdbcTemplate jdbc, ReviewRepository reviewRepository, NamedParameterJdbcTemplate namedParameterJdbc){
         this.jdbc = jdbc;
         this.reviewRepository = reviewRepository;
+        this.namedParameterJdbc = namedParameterJdbc;
     }
 
 
@@ -120,8 +128,40 @@ public class JdbcBookDtoRepository implements BookDtoRepository {
     }
 
     @Override
-    public List<ShortViewBookDTO> getAllBooksBySearchRequestDTO(SearchRequestDTO searchRequestDTO) {
-        // TODO
-        return null;
+    public List<Integer> getAllBookIDBySearchRequestDTO(SearchRequestDTO searchRequestDTO) {
+        List<String> requestedGenres = searchRequestDTO.getGenres();
+        String bookTitle = searchRequestDTO.getTitle();
+        Double minPrice = searchRequestDTO.getMinPrice();
+        Double maxPrice = searchRequestDTO.getMaxPrice();
+        Double minRating = searchRequestDTO.getMinRating();
+        Double maxRating = searchRequestDTO.getMaxRating();
+
+        //bookTitle = "%" + bookTitle.trim() + "%";
+        Map<String, Object> parametersMap = new TreeMap<>();
+        parametersMap.put("requestedGenres", requestedGenres);
+        parametersMap.put("bookTitle", bookTitle);
+        parametersMap.put("minPrice", minPrice);
+        parametersMap.put("maxPrice", maxPrice);
+        parametersMap.put("minRating", minRating);
+        parametersMap.put("maxRating", maxRating);
+
+        SqlParameterSource parameters = new MapSqlParameterSource(parametersMap);
+
+        String sqlQuery = "WITH tmp_table AS (\n" +
+                "SELECT book_id, array_agg(genre_name ORDER BY genre_name) AS genres FROM book_genre GROUP BY book_id\n" +
+                ") SELECT tmp_table.book_id AS book_id FROM  tmp_table \n" +
+                "INNER JOIN book ON book.book_id = tmp_table.book_id\n" +
+                "\tLEFT JOIN rating_book ON rating_book.book_id = tmp_table.book_id\n" +
+                "WHERE genres @> ARRAY[:requestedGenres ]::varchar[] AND (price BETWEEN :minPrice AND :maxPrice)\n" +
+                "AND book.title LIKE '%%' GROUP BY (tmp_table.book_id)\n" +
+                "HAVING SUM(rating)/count(rating) BETWEEN :minRating AND :maxRating";
+
+        List<Integer> bookIdList = namedParameterJdbc.queryForList(
+            sqlQuery, parameters, Integer.class
+        );
+
+        System.out.println("bookIDList = " + bookIdList);
+
+        return bookIdList;
     }
 }

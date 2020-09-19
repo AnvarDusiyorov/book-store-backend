@@ -12,5 +12,5 @@ public interface BookDtoRepository {
     List<Integer> getAllBookIdByGenre(String genreName);
     ShortViewBookDTO findShortViewBookByBookID(Integer bookID);
     List<String> getAllGenres();
-    List<ShortViewBookDTO> getAllBooksBySearchRequestDTO(SearchRequestDTO searchRequestDTO);
+    List<Integer> getAllBookIDBySearchRequestDTO(SearchRequestDTO searchRequestDTO);
 }
