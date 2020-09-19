@@ -160,8 +160,6 @@ public class JdbcBookDtoRepository implements BookDtoRepository {
             sqlQuery, parameters, Integer.class
         );
 
-        System.out.println("bookIDList = " + bookIdList);
-
         return bookIdList;
     }
 }
